@@ -3,10 +3,11 @@ import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useAuth } from '../AuthContext';
 import { Container, Card } from 'react-bootstrap';
+import type { Order } from '../types';
 
 const OrderHistory = () => {
   const { user } = useAuth();
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -15,7 +16,10 @@ const OrderHistory = () => {
         where('userId', '==', user?.uid)
       );
       const snapshot = await getDocs(q);
-      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      const data = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as Order[];
       setOrders(data);
     };
 
@@ -28,7 +32,7 @@ const OrderHistory = () => {
       {orders.length === 0 ? (
         <p>No orders yet.</p>
       ) : (
-        orders.map((order: any) => (
+        orders.map((order: Order) => (
           <Card key={order.id} className="mb-3 p-3">
             <p>
               <strong>Order ID:</strong> {order.id}

@@ -15,4 +15,12 @@ interface CartItem extends Product {
   quantity: number;
 }
 
-export type { Product, CartItem };
+interface Order {
+  id: string;
+  userId: string;
+  items: CartItem[];
+  total: string;
+  createdAt: { toDate: () => Date };
+}
+
+export type { Product, CartItem, Order };
