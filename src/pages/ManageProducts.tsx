@@ -40,7 +40,15 @@ const ManageProducts = () => {
   };
 
   useEffect(() => {
-    loadProducts();
+    const fetchOnMount = async () => {
+      const snapshot = await getDocs(collection(db, 'products'));
+      const data = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      })) as unknown as Product[];
+      setProducts(data);
+    };
+    fetchOnMount();
   }, []);
 
   const handleOpen = (product?: Product) => {
